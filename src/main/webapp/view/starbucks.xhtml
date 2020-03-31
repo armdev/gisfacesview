@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gis="http://gisfaces.com">
+
+<ui:composition template="/view/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="GISFaces - Starbucks Graphics"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<p:growl id="growl1" showSummary="true" showDetail="true"></p:growl>
+
+		<p:layout>
+
+			<p:layoutUnit position="center" header="Jacksonville Starbucks Locations" styleClass="center">
+				<h:form id="centerForm" style="height:100%">
+					<h:panelGroup id="panel1" layout="block" styleClass="gisfacesMapPanel"></h:panelGroup>	
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="south" styleClass="center">
+				<h:outputText value="Drag the Starbucks logo to your choice location! The included retail spending layer may help your decision."></h:outputText>
+			</p:layoutUnit>
+
+		</p:layout>
+
+		<h:form id="mapForm">
+			<gis:map id="map1" mapPanel=":centerForm:panel1" background="streets" latitude="30.304353" longitude="-81.655535" zoom="11">
+				<gis:service type="dynamic" url="http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Retail_Spending_Potential/MapServer" opacity="0.5"></gis:service>
+				<gis:service type="graphics" model="#{mapBean.starbucksGraphicsModel}"></gis:service>
+				<f:ajax event="click" listener="#{mapBean.doMapClickListener}" render="growl1"></f:ajax>
+				<f:ajax event="view" listener="#{mapBean.doMapGraphicViewListener}" render="growl1"></f:ajax>
+				<f:ajax event="action" listener="#{mapBean.doMapGraphicActionListener}" render="growl1"></f:ajax>
+				<f:ajax event="drag" listener="#{mapBean.doMapGraphicDragListener}" render="growl1"></f:ajax>
+			</gis:map>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

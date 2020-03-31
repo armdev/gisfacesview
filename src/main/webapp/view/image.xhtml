@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gis="http://gisfaces.com">
+
+<ui:composition template="/view/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="GISFaces - Image Layer"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form style="height:100%;">
+
+			<h:panelGroup id="panel1" layout="block" styleClass="gisfacesMapPanel">
+				<h:panelGroup id="panel2" layout="block" styleClass="gisfacesCoordinatesPanel"></h:panelGroup>
+			</h:panelGroup>
+
+			<gis:map mapPanel="panel1" coordinatesPanel="panel2" background="topo" latitude="45.5" longitude="-122.7" zoom="9" lods="25">
+				<gis:service type="image" url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Portland/Aerial/ImageServer" opacity="1.0"></gis:service>
+			</gis:map>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+
+</html>

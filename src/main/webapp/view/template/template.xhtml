@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>
+		<ui:insert name="title">GISFaces Examples</ui:insert>
+	</title>
+	<h:outputStylesheet library="css" name="examples.css"></h:outputStylesheet>
+</h:head>
+
+<h:body>
+
+	<p:layout fullPage="true">
+
+		<p:layoutUnit position="north">
+			<ui:insert name="header">
+				<ui:include src="/view/template/header.xhtml"/>
+			</ui:insert>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west" header="Examples" collapsible="true">
+			<ui:insert name="menu">
+				<ui:include src="/view/template/menu.xhtml"/>
+			</ui:insert>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+			<ui:insert name="content"></ui:insert>
+		</p:layoutUnit>
+
+	</p:layout>
+
+</h:body>
+
+</html>

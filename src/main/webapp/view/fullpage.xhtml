@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gis="http://gisfaces.com">
+
+<ui:composition template="/view/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="GISFaces - Full Page Layout"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<p:growl id="growl1" showSummary="true" showDetail="true"></p:growl>
+
+		<p:layout>
+
+			<p:layoutUnit position="west" size="300">
+				<h:form id="westForm">
+					<p:panel header="Layers" styleClass="containerPanel">
+						<p:panel header="Background" styleClass="containerPanel">
+							<p:selectOneMenu id="menu1" value="#{mapBean.background}" style="width:100%">
+								<f:selectItems value="#{mapBean.backgrounds}"></f:selectItems>
+								<f:ajax render=":mapForm:mymap"></f:ajax>
+							</p:selectOneMenu>
+						</p:panel>
+						<p:panel header="Earthquakes" styleClass="containerPanel">
+							<h:panelGrid columns="2">
+								<h:selectBooleanCheckbox value="#{mapBean.visible}">
+									<f:ajax render=":mapForm:mymap"></f:ajax>
+								</h:selectBooleanCheckbox>
+								<h:outputText value="Visible"></h:outputText>
+							</h:panelGrid>
+							<h:panelGrid columns="2" width="100%">
+								<h:outputText value="Where"></h:outputText>
+								<h:inputText value="#{mapBean.where}">
+									<f:ajax render=":mapForm:mymap"></f:ajax>
+								</h:inputText>
+								<h:outputText value="Extent"></h:outputText>
+								<h:inputText value="#{mapBean.extent}">
+									<f:ajax render=":mapForm:mymap"></f:ajax>
+								</h:inputText>
+								<h:outputText value="Opacity"></h:outputText>
+								<p:slider for="opacity" minValue="0.0" maxValue="1.0" step="0.01">
+									<p:ajax event="slideEnd" process="opacity" update=":mapForm:mymap"></p:ajax>
+								</p:slider>
+								<h:inputHidden id="opacity" value="#{mapBean.opacity}"></h:inputHidden>
+							</h:panelGrid>
+						</p:panel>
+					</p:panel>
+					<p:panel header="Overview">
+						<h:panelGroup styleClass="gisfacesOverviewPanel" layout="block">
+							<h:panelGroup id="overview" layout="block"></h:panelGroup>
+						</h:panelGroup>
+					</p:panel>
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="east" size="300">
+				<h:form id="eastForm">
+					<p:panel header="Legend">
+						<h:panelGroup styleClass="gisfacesLegendPanel" layout="block">
+							<h:panelGroup id="legend" layout="block"></h:panelGroup>
+						</h:panelGroup>
+					</p:panel>
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="center" header="GISFaces - Full Page Layout" styleClass="center">
+				<h:form id="centerForm" style="height:100%">
+					<h:panelGroup id="mymapdiv" styleClass="gisfacesMapPanel" layout="block">
+						<h:panelGroup id="navbar" layout="block" styleClass="gisfacesNavbarPanel"></h:panelGroup>
+						<h:panelGroup id="loading" styleClass="gisfacesLoadingPanel" layout="block">
+							<h:panelGroup styleClass="fa fa-refresh fa-spin"></h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup styleClass="gisfacesGeocoderPanel" layout="block">
+							<h:panelGroup id="geocoder" layout="block"></h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup id="coordinates" styleClass="gisfacesCoordinatesPanel" layout="block"></h:panelGroup>
+					</h:panelGroup>
+				</h:form>
+			</p:layoutUnit>
+
+		</p:layout>
+
+		<h:form id="mapForm">
+			<gis:map id="mymap" mapPanel=":centerForm:mymapdiv" overviewPanel=":westForm:overview" geocoderPanel=":centerForm:geocoder" legendPanel=":eastForm:legend" coordinatesPanel=":centerForm:coordinates" loadingPanel=":centerForm:loading" navigationPanel=":centerForm:navbar" background="#{mapBean.background}" latitude="#{mapBean.latitude}" longitude="#{mapBean.longitude}" zoom="#{mapBean.zoom}">
+				<gis:service type="dynamic" url="http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Earthquakes/EarthquakesFromLastSevenDays/MapServer" opacity="#{mapBean.opacity}">
+					<gis:layer number="0" visible="#{mapBean.visible}" where="#{mapBean.where}" extent="#{mapBean.extent}"></gis:layer>
+				</gis:service>
+				<f:ajax event="click" listener="#{mapBean.doMapClickListener}" render="growl1"></f:ajax>
+				<f:ajax event="extent" listener="#{mapBean.doMapExtentListener}" render="growl1"></f:ajax>
+				<f:ajax event="view" listener="#{mapBean.doMapGraphicViewListener}" render="growl1"></f:ajax>
+				<f:ajax event="action" listener="#{mapBean.doMapGraphicActionListener}" render="growl1"></f:ajax>
+				<f:ajax event="geolocation" listener="#{mapBean.doMapGeoLocationListener}" render="growl1"></f:ajax>
+			</gis:map>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

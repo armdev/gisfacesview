@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gis="http://gisfaces.com">
+
+<ui:composition template="/view/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="GISFaces - Map Service Viewer"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<p:growl id="growl1" showSummary="true" showDetail="true"></p:growl>
+
+		<p:layout>
+
+			<p:layoutUnit position="north">
+				<h:form>
+					<p:panel header="GISFaces Map Service Viewer" styleClass="ui-fluid">
+						<p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-1,ui-grid-col-10,ui-grid-col-1">
+							<p:outputLabel for="service" value="Map Service"></p:outputLabel>
+							<p:inputText id="service" value="#{serviceBean.url}" required="true"></p:inputText>
+							<p:commandButton value="View" action="#{serviceBean.doViewButtonAction}" update=":mapForm:map1"></p:commandButton>
+						</p:panelGrid>
+					</p:panel>
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="west" size="325">
+				<h:form id="westForm">
+					<h:panelGrid width="100%">
+						<p:panel header="Background">
+							<p:selectOneMenu id="menu1" value="#{serviceBean.background}" style="width:100%">
+								<f:selectItems value="#{serviceBean.backgrounds}"></f:selectItems>
+								<f:ajax render=":mapForm:map1"></f:ajax>
+							</p:selectOneMenu>
+						</p:panel>
+						<p:panel header="Legend">
+							<p:scrollPanel mode="native" style="height:200px;">
+								<h:panelGroup styleClass="gisfacesLegendPanel" layout="block">
+									<h:panelGroup id="panel3" layout="block"></h:panelGroup>
+								</h:panelGroup>
+							</p:scrollPanel>
+						</p:panel>
+						<p:panel header="Overview">
+							<h:panelGroup styleClass="gisfacesOverviewPanel" layout="block">
+								<h:panelGroup id="panel4" layout="block"></h:panelGroup>
+							</h:panelGroup>
+						</p:panel>
+					</h:panelGrid>
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="center">
+				<h:form id="centerForm" style="height:100%">
+					<h:panelGroup id="panel1" layout="block" styleClass="gisfacesMapPanel">
+						<h:panelGroup id="panel2" styleClass="gisfacesLoadingPanel" layout="block">
+							<h:panelGroup styleClass="fa fa-refresh fa-spin"></h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:form>
+			</p:layoutUnit>
+
+		</p:layout>
+
+		<h:form id="mapForm">
+			<gis:map id="map1" mapPanel=":centerForm:panel1" loadingPanel=":centerForm:panel2" legendPanel=":westForm:panel3" overviewPanel=":westForm:panel4" background="#{serviceBean.background}" latitude="#{serviceBean.latitude}" longitude="#{serviceBean.longitude}" zoom="#{serviceBean.zoom}">
+				<gis:service type="dynamic" url="#{serviceBean.url}"></gis:service>
+				<f:ajax event="click" listener="#{serviceBean.doMapClickListener}"></f:ajax>
+				<f:ajax event="extent" listener="#{serviceBean.doMapExtentListener}"></f:ajax>
+				<f:ajax event="view" listener="#{serviceBean.doMapGraphicViewListener}"></f:ajax>
+			</gis:map>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

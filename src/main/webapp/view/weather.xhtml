@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gis="http://gisfaces.com">
+
+<ui:composition template="/view/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="GISFaces - Weather Map"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<p:growl id="growl1" showSummary="true" showDetail="true"></p:growl>
+
+		<p:layout>
+
+			<p:layoutUnit position="west" size="300" header="Control Panel" collapsible="true">
+				<h:form id="westForm">
+					<p:panel header="Options" toggleable="true" toggleSpeed="0" styleClass="containerPanel">
+						<h:panelGrid columns="1" width="100%">
+							<h:outputText value="Background" styleClass="bold"></h:outputText>
+							<p:selectOneMenu value="#{mapBean.background}">
+								<f:selectItems value="#{mapBean.backgrounds}"></f:selectItems>
+								<f:ajax render=":mapForm:map1"></f:ajax>
+							</p:selectOneMenu>
+
+							<h:outputText value="Opacity" styleClass="bold"></h:outputText>
+							<p:slider for="opacity" minValue="0.0" maxValue="1.0" step="0.01">
+								<p:ajax event="slideEnd" process="opacity" update=":mapForm:map1"></p:ajax>
+							</p:slider>
+							<h:inputHidden id="opacity" value="#{mapBean.opacity}"></h:inputHidden>
+						</h:panelGrid>
+					</p:panel>
+
+					<p:panel header="Legend" toggleable="true" toggleSpeed="0" styleClass="containerPanel">
+						<p:scrollPanel styleClass="gisfacesLegendPanel" style="max-height:200px;" mode="native">
+							<h:panelGroup id="panel2" layout="block"></h:panelGroup>
+						</p:scrollPanel>
+					</p:panel>
+
+					<p:panel header="Overview" toggleable="true" toggleSpeed="0" styleClass="containerPanel">
+						<h:panelGroup id="panel3" styleClass="overviewPanel" layout="block"></h:panelGroup>
+					</p:panel>
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="center" header="Current Weather Conditions">
+				<h:form id="centerForm" style="height:100%">
+					<h:panelGroup id="panel1" styleClass="gisfacesMapPanel" layout="block"></h:panelGroup>	
+				</h:form>
+			</p:layoutUnit>
+
+		</p:layout>
+
+		<h:form id="mapForm">
+			<gis:map id="map1" mapPanel=":centerForm:panel1" legendPanel=":westForm:panel2" overviewPanel=":westForm:panel3" background="#{mapBean.background}" latitude="39.828175" longitude="-98.5795" zoom="4">
+				<gis:service id="warnings" type="dynamic" url="https://idpgis.ncep.noaa.gov/arcgis/rest/services/NWS_Forecasts_Guidance_Warnings/watch_warn_adv/MapServer" opacity="#{mapBean.opacity}" refreshInterval="5"></gis:service>
+				<gis:service id="radar" type="dynamic" url="https://nowcoast.noaa.gov/arcgis/rest/services/nowcoast/radar_meteo_imagery_nexrad_time/MapServer" opacity="#{mapBean.opacity}" refreshInterval="5"></gis:service>
+				<f:ajax event="click" listener="#{mapBean.doMapClickListener}" render="growl1"></f:ajax>
+				<f:ajax event="extent" listener="#{mapBean.doMapExtentListener}" render="growl1"></f:ajax>
+				<f:ajax event="view" listener="#{mapBean.doMapGraphicViewListener}" render="growl1"></f:ajax>
+				<f:ajax event="action" listener="#{mapBean.doMapGraphicActionListener}" render="growl1"></f:ajax>
+			</gis:map>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

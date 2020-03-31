@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gis="http://gisfaces.com">
+
+<ui:composition template="/view/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="GISFaces - Proxy Usage"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form>
+
+			<h:panelGrid>
+				<h:panelGroup id="panel1" layout="block" styleClass="gisfacesMapPanel"></h:panelGroup>
+				<h:outputText value="* The required configuration file com/gisfaces/proxy/proxy.xml must be in your application's Java classpath. Copy the sample from the gisfaces .jar file to your project."></h:outputText>
+				<h:outputText value="* Check the log file gisfaces-proxy.log to view requests."></h:outputText>
+				<f:facet name="footer">
+					<h:panelGrid columns="5">
+						<f:facet name="header">
+							<h:outputText value="Proxy Related Attributes"></h:outputText>
+						</f:facet>
+						<h:outputText styleClass="bold" value="Component"></h:outputText>
+						<h:outputText styleClass="bold" value="Attribute"></h:outputText>
+						<h:outputText styleClass="bold" value="Description"></h:outputText>
+						<h:outputText styleClass="bold" value="Default"></h:outputText>
+						<h:outputText styleClass="bold" value="Current"></h:outputText>
+
+						<h:outputText value="gis:map"></h:outputText>
+						<h:outputText value="proxyEnabled"></h:outputText>
+						<h:outputText value="Enables ESRI JSAPI proxy page support required for server-based functionality."></h:outputText>
+						<h:outputText value="false"></h:outputText>
+						<h:outputText value="true"></h:outputText>
+
+						<h:outputText value="gis:map"></h:outputText>
+						<h:outputText value="proxyAllRequests"></h:outputText>
+						<h:outputText value="Force all requests to go through the proxy. This attribute is used only if the proxy is enabled."></h:outputText>
+						<h:outputText value="false"></h:outputText>
+						<h:outputText value="true"></h:outputText>
+
+						<h:outputText value="gis:map"></h:outputText>
+						<h:outputText value="proxyUrl"></h:outputText>
+						<h:outputText value="Fully qualified URL to a custom proxy to OVERRIDE the proxy contained GISFaces. This should not be necessary."></h:outputText>
+						<h:outputText value="null"></h:outputText>
+						<h:outputText value="null"></h:outputText>
+					</h:panelGrid>
+				</f:facet>
+			</h:panelGrid>
+
+			<gis:map mapPanel="panel1" background="streets" proxyEnabled="true" proxyAllRequests="true"></gis:map>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+
+</html>

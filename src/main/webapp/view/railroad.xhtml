@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:gis="http://gisfaces.com">
+
+<ui:composition template="/view/template/template.xhtml">
+
+	<ui:define name="title">
+		<h:outputText value="GISFaces - Railroad Map"></h:outputText>
+	</ui:define>
+
+	<ui:define name="content">
+
+		<p:growl id="growl1" showSummary="true" showDetail="true"></p:growl>
+
+		<p:layout>
+
+			<p:layoutUnit position="west" size="325" header="Control Panel" collapsible="true">
+				<h:form id="westForm">
+					<p:panel header="Background" toggleable="true" toggleSpeed="0" styleClass="containerPanel">
+						<p:selectOneMenu id="menu1" value="#{mapBean.background}">
+							<f:selectItems value="#{mapBean.backgrounds}"></f:selectItems>
+							<f:ajax render=":mapForm:map1"></f:ajax>
+						</p:selectOneMenu>
+					</p:panel>
+					<p:panel header="Legend" toggleable="true" toggleSpeed="0" styleClass="containerPanel">
+						<p:scrollPanel style="max-height:200px;" mode="native">
+							<h:panelGroup id="panel6" layout="block"></h:panelGroup>
+						</p:scrollPanel>
+					</p:panel>
+					
+					<p:panel header="Overview" toggleable="true" toggleSpeed="0" styleClass="containerPanel">
+						<h:panelGroup styleClass="gisfacesOverviewPanel" layout="block">
+							<h:panelGroup id="panel7" layout="block"></h:panelGroup>
+						</h:panelGroup>
+					</p:panel>
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit position="center" header="FRA Rail, Mileposts, Crossings, Freight Stations, and Amtrak Layers" styleClass="center">
+				<h:form id="centerForm" style="height:100%">
+					<h:panelGroup id="panel1" layout="block" styleClass="gisfacesMapPanel">
+						<h:panelGroup layout="block" styleClass="gisfacesGeocoderPanel">
+							<h:panelGroup id="panel2" layout="block"></h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup id="panel3" layout="block" styleClass="gisfacesNavbarPanel"></h:panelGroup>
+						<h:panelGroup id="panel4" layout="block" styleClass="gisfacesCoordinatesPanel"></h:panelGroup>
+						<h:panelGroup id="panel5" layout="block" styleClass="gisfacesLoadingPanel">
+							<h:panelGroup styleClass="fa fa-refresh fa-spin"></h:panelGroup>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:form>
+			</p:layoutUnit>
+
+		</p:layout>
+
+		<h:form id="mapForm">
+			<gis:map id="map1" mapPanel=":centerForm:panel1" geocoderPanel=":centerForm:panel2" navigationPanel=":centerForm:panel3" coordinatesPanel=":centerForm:panel4" loadingPanel=":centerForm:panel5" legendPanel=":westForm:panel6" overviewPanel=":westForm:panel7" background="#{mapBean.background}" latitude="41.8" longitude="-87.7" zoom="10" zoomFactor="20">
+				<gis:service type="dynamic" url="http://fragis.fra.dot.gov/fragis/rest/services/RailMainLine/MapServer"></gis:service>
+				<gis:service type="dynamic" url="http://fragis.fra.dot.gov/fragis/rest/services/PassengerRail/MapServer"></gis:service>
+				<gis:service type="dynamic" url="http://fragis.fra.dot.gov/fragis/rest/services/FreightStations/MapServer"></gis:service>
+				<gis:service type="dynamic" url="http://fragis.fra.dot.gov/fragis/rest/services/FRAGradeXing/MapServer"></gis:service>
+				<gis:service type="dynamic" url="http://fragis.fra.dot.gov/fragis/rest/services/Mileposts_MapService/MapServer"></gis:service>
+				<f:ajax event="click" listener="#{mapBean.doMapClickListener}" render="growl1"></f:ajax>
+				<f:ajax event="extent" listener="#{mapBean.doMapExtentListener}" render="growl1"></f:ajax>
+				<f:ajax event="view" listener="#{mapBean.doMapGraphicViewListener}" render="growl1"></f:ajax>
+				<f:ajax event="action" listener="#{mapBean.doMapGraphicActionListener}" render="growl1"></f:ajax>
+			</gis:map>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>
