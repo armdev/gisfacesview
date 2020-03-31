@@ -32,7 +32,7 @@
 		</p:layout>
 
 		<h:form id="mapForm">
-			<gis:map id="map1" mapPanel=":centerForm:panel1" background="streets" latitude="30.304353" longitude="-81.655535" zoom="11">
+			<gis:map id="map1" mapPanel=":centerForm:panel1" background="streets" latitude="30.304353" longitude="-81.655535" zoom="14">
 				<gis:service type="dynamic" url="http://server.arcgisonline.com/arcgis/rest/services/Demographics/USA_Retail_Spending_Potential/MapServer" opacity="0.5"></gis:service>
 				<gis:service type="graphics" model="#{mapBean.starbucksGraphicsModel}"></gis:service>
 				<f:ajax event="click" listener="#{mapBean.doMapClickListener}" render="growl1"></f:ajax>
